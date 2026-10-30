@@ -1,0 +1,250 @@
+/* Design tokens — Framer-style dark canvas (see DESIGN reference) */
+:root {
+  --canvas: #090909;
+  --surface-1: #141414;
+  --surface-2: #1c1c1c;
+  --hairline: #262626;
+  --hairline-soft: #1a1a1a;
+  --ink: #ffffff;
+  --ink-muted: #999999;
+  --primary: #ffffff;
+  --on-primary: #000000;
+  --accent: #0099ff;
+  --g-magenta: #d44df0;
+  --g-violet: #6a4cf5;
+  --g-orange: #ff7a3d;
+  --g-coral: #ff5577;
+  --success: #22c55e;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 15px;
+  --r-xl: 20px;
+  --r-xxl: 30px;
+  --r-pill: 100px;
+
+  --font-display: 'Geist', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --features: 'cv01', 'cv05', 'cv09', 'cv11', 'ss03';
+
+  /* Motion tokens — Material "authentic motion" curves (easings.net naming) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* easeOutQuint — entrances */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* easeInOutCubic — moves */
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45); /* easeInCirc — exits */
+  --dur-1: 120ms;
+  --dur-2: 220ms;
+  --dur-3: 420ms;
+
+  --elev-2: inset 0 0.5px 0 rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.25);
+  --ring: 0 0 0 1px rgba(0, 153, 255, 0.55);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-feature-settings: var(--features);
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.caption {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink-muted);
+}
+
+.micro {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buttons */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    transform var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+.pill:hover {
+  background: var(--surface-2);
+}
+.pill:active {
+  transform: scale(0.96);
+}
+.pill.primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.pill.ghost {
+  background: transparent;
+  color: var(--ink-muted);
+}
+.pill.ghost[aria-pressed='true'] {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--surface-1);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform var(--dur-2) var(--ease-out), background-color var(--dur-2);
+}
+.icon-btn:hover {
+  background: var(--surface-2);
+}
+.icon-btn:active {
+  transform: scale(0.92);
+}
+
+.card {
+  background: var(--surface-1);
+  border-radius: var(--r-xl);
+  padding: 16px;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-1);
+  border-radius: var(--r-lg);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  animation: shimmer 1.4s var(--ease-in-out) infinite;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: var(--canvas);
+  font-family: var(--font-body);
+}
+.basemap-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.25);
+}
+.leaflet-control-attribution {
+  background: rgba(9, 9, 9, 0.7) !important;
+  color: var(--ink-muted) !important;
+  font-size: 10px;
+  border-radius: var(--r-sm) 0 0 0;
+}
+.leaflet-control-attribution a {
+  color: #bbbbbb !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--surface-2);
+  color: var(--ink);
+  box-shadow: var(--elev-2);
+}
+.leaflet-popup-content-wrapper {
+  border-radius: var(--r-lg);
+}
+.leaflet-popup-content {
+  margin: 14px 16px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.leaflet-popup-content b {
+  font-weight: 600;
+}
+.leaflet-popup-close-button {
+  color: var(--ink-muted) !important;
+}
+.leaflet-fade-anim .leaflet-popup {
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+.radar-frame {
+  transition: opacity 260ms var(--ease-in-out);
+}
+
+/* uPlot */
+.u-legend {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

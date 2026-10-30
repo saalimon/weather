@@ -1,0 +1,75 @@
+name: Build & deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Refresh the GISTDA snapshot (fire hotspots, flood extent) every 30 minutes.
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.gate.outputs.skip }}
+    steps:
+      - id: gate
+        name: Skip scheduled runs until GISTDA is configured
+        env:
+          HAS_KEY: ${{ secrets.GISTDA_API_KEY != '' }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$HAS_KEY" != "true" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.skip != 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - if: steps.gate.outputs.skip != 'true'
+        run: npm ci
+
+      - if: steps.gate.outputs.skip != 'true'
+        run: npm run check && npm test
+
+      - name: Fetch GISTDA snapshot
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          GISTDA_API_KEY: ${{ secrets.GISTDA_API_KEY }}
+        run: npm run fetch:gistda
+
+      - if: steps.gate.outputs.skip != 'true'
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.gate.outputs.skip != 'true'
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

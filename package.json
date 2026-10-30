@@ -1,0 +1,31 @@
+{
+  "name": "weather",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "fetch:gistda": "node scripts/fetch-gistda.mjs"
+  },
+  "author": "saalimon",
+  "license": "MIT",
+  "description": "Near real-time weather tracking & prediction for Thailand",
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "@tsconfig/svelte": "^5.0.8",
+    "@types/leaflet": "^1.9.22",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.7",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "uplot": "^1.6.32"
+  },
+  "private": true,
+  "type": "module"
+}
